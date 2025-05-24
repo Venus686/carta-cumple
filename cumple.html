@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Carta con emoji sobre 💌</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffe6f0, #ffccde);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #b30059;
+    position: relative;
+    user-select: none;
+  }
+
+  /* Corazones flotantes */
+  .heart {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background-color: #ff66aa;
+    transform: rotate(-45deg);
+    animation: floatUp 6s linear infinite;
+    opacity: 0.8;
+    border-radius: 4px 4px 0 0;
+    box-shadow:
+      10px 0 0 #ff66aa,
+      0 10px 0 #ff66aa;
+  }
+  @keyframes floatUp {
+    0% {
+      transform: translateY(100vh) rotate(-45deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-10vh) rotate(-45deg);
+      opacity: 0;
+    }
+  }
+  /* Corazones con delays */
+  .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+  .heart:nth-child(2) { left: 20%; animation-delay: 2s; }
+  .heart:nth-child(3) { left: 30%; animation-delay: 4s; }
+  .heart:nth-child(4) { left: 50%; animation-delay: 1s; }
+  .heart:nth-child(5) { left: 60%; animation-delay: 3s; }
+  .heart:nth-child(6) { left: 70%; animation-delay: 5s; }
+  .heart:nth-child(7) { left: 80%; animation-delay: 1.5s; }
+  .heart:nth-child(8) { left: 90%; animation-delay: 4.5s; }
+
+  /* Contenedor */
+  .card-container {
+    width: 400px;
+    text-align: center;
+    user-select: none;
+  }
+
+  /* Emoji sobre */
+  .envelope-emoji {
+    font-size: 12rem; /* Más grande */
+    cursor: pointer;
+    transition: transform 0.6s ease;
+    user-select: none;
+  }
+  .envelope-emoji.opened {
+    transform: rotateX(180deg);
+  }
+
+  /* Carta (mensaje) */
+  .message {
+    max-width: 350px;
+    margin: 20px auto 0 auto;
+    background: #ffb3d1;
+    border-radius: 20px;
+    padding: 25px 30px;
+    font-size: 1.1em; /* Un poco más grande para legibilidad */
+    color: #b30059;
+    box-shadow: 0 8px 15px rgba(179, 0, 89, 0.4);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    user-select: text;
+    line-height: 1.5;
+    white-space: pre-line;
+    text-align: left; /* Más legible */
+  }
+  .message.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Corazón cierre */
+  .heart-close {
+    width: 60px;
+    height: 60px;
+    background-color: #ff66aa;
+    margin: 20px auto 0 auto;
+    transform: rotate(-45deg);
+    border-radius: 15px 15px 0 0;
+    box-shadow:
+      30px 0 0 #ff66aa,
+      0 30px 0 #ff66aa;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .heart-close.visible {
+    opacity: 1;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- Corazones flotantes -->
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+
+  <div class="card-container" role="main" aria-label="Carta de cumpleaños con emoji sobre">
+    <div id="envelopeEmoji" class="envelope-emoji" role="button" tabindex="0" aria-pressed="false" aria-label="Sobre de carta, pulsa para abrir">
+      💌
+    </div>
+
+    <div class="message" id="message" role="region" aria-live="polite">
+      Feliz cumpleaños Lulu, para la girl que conozco desde pequeña.
+      Y SI EL DIA SE PONE FEO TU ME LO HACES BONITO.
+      Sos ese cuento que no quiero saber final.
+      Te agradezco mucho la manera en la que he sido acogida a tu alrededor tanto familiares, como las amistades que hemos compartido, solo queria decirte que siempre vas a ser bienvenida a mi casa y a todas las posibles fiestas existentes, que al igual que tu te apuntas a un bombardeo, yo espero poder invitarte a muchos de ellos. Me siento muy cómoda a tu lado y espero poder compartir muchos más momentos junto a ti. Creo que el resto ya lo sabes 
+    </div>
+
+    <div class="heart-close" id="heartClose" aria-hidden="true"></div>
+  </div>
+
+<script>
+  const envelopeEmoji = document.getElementById('envelopeEmoji');
+  const message = document.getElementById('message');
+  const heartClose = document.getElementById('heartClose');
+
+  function toggleCard() {
+    const opened = envelopeEmoji.classList.toggle('opened');
+    message.classList.toggle('visible');
+    heartClose.classList.toggle('visible');
+    envelopeEmoji.setAttribute('aria-pressed', opened);
+  }
+
+  envelopeEmoji.addEventListener('click', toggleCard);
+  envelopeEmoji.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleCard();
+    }
+  });
+
+  // Leer parámetro nombre de la URL para personalizar mensaje
+  const urlParams = new URLSearchParams(window.location.search);
+  const nombre = urlParams.get('nombre');
+  if (nombre) {
+    message.textContent = `Querido/a ${nombre},\n\nQue este día especial esté lleno de amor, alegría y muchísimos momentos felices. ¡Felicidades!`;
+  }
+</script>
+
+</body>
+</html>
